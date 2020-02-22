@@ -1,12 +1,47 @@
 type Query{
     getUsers(is_active:Boolean):[User!]!
     getUser(id:ID, email:String):User
+    getEvents(is_active:Boolean,tag:String,city:String,date:String):[Event!]!
+    getEvent(is:ID!):Event!
 }
 
 type Mutation{
     createUser(data:Useradd!):User!
     updateUser(id:ID!,data:Userupdate):User!
     deleteUser(id:ID!):User!
+    createEvent(data:Eventadd):Event!
+    updateEvent(id:ID!,data:Eventupdate):Event!
+    deleteEvent(id:ID!):Event
+}
+
+input Eventadd{
+    title:String!
+    description:String!
+    date:String!
+    address:Addressadd
+    created_by:String
+    banner:String
+    tags:[String]
+}
+
+input Eventupdate{
+    title:String
+    description:String
+    address:Addressadd
+    date:String
+    banner:String
+    tags:[String]
+}
+
+input Addressadd{
+    street:String
+    city:String
+    number:String
+    country:String
+    state: String
+    zip:String
+    lat:Float
+    long:Float
 }
 
 input Userupdate{
