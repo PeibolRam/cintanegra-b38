@@ -84,6 +84,7 @@ enum GENDER{
 }
 
 type Event{
+    _id:ID
     title:String
     description:String
     date:String

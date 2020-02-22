@@ -12,8 +12,9 @@ module.exports = {
                 Object.keys(args.data[key]).forEach( addressKey => {
                     updateEvent = { ...updateEvent,[`${key}.${addressKey}`]: args.data[key][addressKey] }
                 })
-            }
-            updateEvent= {...updateEvent, [key]:args.data[key]}
+            }else{
+                updateEvent= {...updateEvent, [key]:args.data[key]}
+            }   
         })
         return Events.findByIdAndUpdate(args.id,{$set:updateEvent},{new:true}).exec()
     },
