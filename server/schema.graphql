@@ -5,6 +5,16 @@ type Query{
 
 type Mutation{
     createUser(data:Useradd!):User!
+    updateUser(id:ID!,data:Userupdate):User!
+    deleteUser(id:ID!):User!
+}
+
+input Userupdate{
+    first_name:String
+    last_name:String
+    gender:GENDER
+    birth_date:String
+    photo:String
 }
 
 input Useradd{
