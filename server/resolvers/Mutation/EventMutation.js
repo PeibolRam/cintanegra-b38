@@ -1,7 +1,16 @@
 const Events = require('../../models/events')
+const storage = require('../../utils/storage')
 
 module.exports = {
-    createEvent:(root,args) => {
+    createEvent:async(root,args,context) => {
+        args.data.create_by = context.user._id;
+        if(args.data.banner){
+            const { createReadStream } = await args.data.banner;
+            const stream = createReadStream();
+            const image = await storage({ stream })
+
+            args.data = {...args.data, banner:image.url}
+        }
         return Events.create(args.data)
     },
 

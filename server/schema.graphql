@@ -1,27 +1,49 @@
-type Query{
-    getUsers(is_active:Boolean):[User!]!
-    getUser(id:ID, email:String):User
-    getEvents(is_active:Boolean,tag:String,city:String,date:String):[Event!]!
-    getEvent(is:ID!):Event!
+scalar Upload
+directive @auth on FIELD_DEFINITION
+
+type Query{ #Aqui van todos los queries
+    getUsers(is_active:Boolean):[User]!@auth
+    getUser(id:ID, email:String):User@auth
+    getEvents(is_active:Boolean,
+                tag:String,
+                city:String,
+                date:String
+            ):[Event]
+    getEvent(id:ID!):Event
+    login(email:String,password:String):String
+    
 }
 
-type Mutation{
+type Mutation{ #Aqui van todos los mutation y modificaciones
+#Post,PUT,PATCH,DELETE
     createUser(data:Useradd!):User!
-    updateUser(id:ID!,data:Userupdate):User!
-    deleteUser(id:ID!):User!
-    createEvent(data:Eventadd):Event!
-    updateEvent(id:ID!,data:Eventupdate):Event!
-    deleteEvent(id:ID!):Event
+    updateUser(id:ID!,data:Userupdate):User!@auth
+    deleteUser(id:ID!):User!@auth
+    createEvent(data:Eventadd):Event!@auth
+    updateEvent(id:ID!,data:Eventupdate):Event!@auth
+    deleteEvent(id:ID!):Event@auth
+
 }
 
-input Eventadd{
+
+input Eventadd {
     title:String!
     description:String!
     date:String!
     address:Addressadd
-    created_by:String
-    banner:String
+    banner:Upload
     tags:[String]
+}
+
+input Addressadd {
+    street:String
+    city:String
+	number:String
+	country:String
+	state:String
+	zip:String
+	lat:Float
+	long:Float
 }
 
 input Eventupdate{
@@ -33,16 +55,6 @@ input Eventupdate{
     tags:[String]
 }
 
-input Addressadd{
-    street:String
-    city:String
-    number:String
-    country:String
-    state: String
-    zip:String
-    lat:Float
-    long:Float
-}
 
 input Userupdate{
     first_name:String
@@ -52,24 +64,25 @@ input Userupdate{
     photo:String
 }
 
-input Useradd{
+input Useradd{#Write
     first_name:String!
     last_name:String!
     email:String!
     password:String!
     birth_date:String
-    gender: GENDER
-    photo:String
+    gender:GENDER
+    photo:Upload
 }
 
-type User{
+type User{#Read-only
     _id:ID
     first_name:String
     last_name:String
     email:String
     birth_date:String
-    gender: GENDER
+    gender:GENDER
     photo:String
+    password:String
     events_create:[Event]
     events_assists:[Event]
     is_active:Boolean
@@ -77,19 +90,19 @@ type User{
     updatedAt:String
 }
 
-enum GENDER{
-    M 
-    F 
+enum GENDER {
+    M
+    F
     O
 }
 
 type Event{
-    _id:ID
+    _id:ID!
     title:String
     description:String
     date:String
     address:Address
-    assistants:[User]
+    assitants:[User]
     created_by:User
     banner:String
     tags:[String]
@@ -101,10 +114,10 @@ type Event{
 type Address{
     street:String
     city:String
-    number:String
-    country:String
-    state: String
-    zip:String
-    lat:Float
-    long:Float
+	number:String
+	country:String
+	state:String
+	zip:String
+	lat:Float
+	long:Float
 }
